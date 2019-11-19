@@ -1,4 +1,5 @@
 require('dotenv').config();
+const websocket = require('websocket');
 const tmi = require('tmi.js');
 
 // Define Configuration Options from .env file
