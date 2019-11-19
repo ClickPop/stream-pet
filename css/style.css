@@ -1,0 +1,14 @@
+body {
+  font-family: "Helvetica", arial, sans-serif;
+  font-size: 18px;
+  padding: 1rem; }
+
+.bubble {
+  background: #ffffff;
+  border-radius: 1rem;
+  display: inline-block;
+  max-width: 400px;
+  padding: 1rem;
+  width: 100%; }
+
+/*# sourceMappingURL=style.css.map */

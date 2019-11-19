@@ -1,0 +1,26 @@
+// Variables
+// Color
+$white:         #ffffff;
+
+$bubbleBG:      $white;
+
+// Fonts
+$serif:         'Helvetica', arial, sans-serif;
+
+// Shapes
+$borderRadius:    1rem;
+
+body  {
+  font-family: $serif;
+  font-size: 18px;
+  padding: 1rem;
+}
+
+.bubble {
+  background: $bubbleBG;
+  border-radius: $borderRadius;
+  display: inline-block;
+  max-width: 400px;
+  padding: 1rem;
+  width: 100%;
+}
