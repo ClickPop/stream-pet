@@ -13,7 +13,7 @@ const logIt = require('./lib/logIt.js');
 const options = require('./config/options.js');
 
 // Create an instance of the tmi.js client
-const tmiClient = new tmi.client(options.tmi);
+const tmiClient = new tmi.client(options.tmi.client);
 const httpServer = http.createServer();
 let websocketServer = null;
 let websocketClients = [];
@@ -21,6 +21,7 @@ let websocketClients = [];
 // Register our event handlers (defined below)
 tmiClient.on('message', onMessageHandler);
 tmiClient.on('connected', onConnectedHandler);
+tmiClient.on('join', onJoinHandler);
 
 // Connect to Twitch IRC via tmi.js
 tmiClient.connect();
@@ -45,24 +46,6 @@ websocketServer.on('request', function(request) {
 
     logIt('Connection accepted', request.origin);
 
-    connection.on('message', function(message) {
-        if (message.type !== 'utf8') {
-            logIt('Message Rejected', 'Only UTF8 messages accepted');
-            return;
-        } else if (message.type === 'utf8') {
-            var obj = JSON.stringify({
-                type: 'message',
-                data: {
-                    time: (new Date()).getTime(),
-                    text: message.utf8Data
-                }
-            });
-            for (var i = 0; i < websocketClients.length; i++) {
-                websocketClients[i].sendUTF(obj);
-            }
-        }
-    });
-
     connection.on('close', function(connection) {
         logIt('Peer disconnected', connection.remoteAddress);
 
@@ -76,39 +59,45 @@ function originIsAllowed(origin) {
   return true;
 }
 
+function sendClientsMessage(message, type) {
+    var obj = {
+        type: type,
+        data: {
+            time: (new Date()).getTime(),
+            text: message
+        }
+    };
+    var json = JSON.stringify(obj);
+    for (var i = 0; i < websocketClients.length; i++) {
+        websocketClients[i].sendUTF(json);
+    }
+    logIt(`Sent clients ${type}`, obj);
+}
+
+function onConnectedHandler (addr, port) {
+  logIt('Connected', `${addr}:${port}`);
+}
+
+function onJoinHandler (channel) {
+  logIt('Joined', `${channel}`);
+}
+
 // Message Handler (called on message receipt)
 function onMessageHandler (target, context, msg, self) {
     self = (self) ? self : false;
 
     if (!self) {
         // Trim whitespace for sanitize
-        const commandName = msg.trim();
+        const command = msg.trim();
+        const commandTest = /!\w+/;
 
-        switch(commandName) {
-            case "!pirate":
-                tmiClient.say(target, 'Avast ye matey!');
-                break;
-            case "!slap":
-                tmiClient.say(target, 'No trout slapping alowed; that $&#^ is for mIRC in the 90s!');
-                break;
-            case "!dice":
-                const num = rollDice();
-                tmiClient.say(target, `Rolling a d20... stand back!!!`);
-                tmiClient.say(target, `You rolled a ${num}`);
-                break;
-            default:
-                logIt('Unknown command', commandName);
+        if (commandTest.test(command)) {
+            logIt('Command issued', command, 'Sending to websocket clients');
+            sendClientsMessage(command, 'command');
+        } else {
+            logIt('Unknown command', command);
         }
     }
 
     return;
-}
-
-function rollDice () {
-  const sides = 20;
-  return Math.floor(Math.random() * sides) + 1;
-}
-
-function onConnectedHandler (addr, port) {
-  logIt('Connected', `${addr}:${port}`);
 }
