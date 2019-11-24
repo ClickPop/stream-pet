@@ -1,7 +1,9 @@
 body {
+  background: salmon;
   font-family: "Helvetica", arial, sans-serif;
   font-size: 18px;
-  padding: 1rem; }
+  padding: 1rem;
+}
 
 .bubble {
   background: #ffffff;
@@ -9,6 +11,7 @@ body {
   display: inline-block;
   max-width: 400px;
   padding: 1rem;
-  width: 100%; }
+  width: 100%;
+}
 
 /*# sourceMappingURL=style.css.map */

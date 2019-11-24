@@ -65,6 +65,7 @@ function sendMessageToLog(data, $log) {
 }
 function logMessage(msg, $log, classes = 'normal') {
     classes = typeof classes === 'string' ? classes : 'normal';
+    $log.empty();
     $('<li>', { html: msg, class: classes }).appendTo($log);
 }
 
