@@ -89,11 +89,12 @@ function onMessageHandler (target, context, msg, self) {
     if (!self) {
         // Trim whitespace for sanitize
         const command = msg.trim();
-        const commandTest = /!\w+/;
+        const commandTest = /!talk+/;
 
         if (commandTest.test(command)) {
+            let speech = command.substring(6, command.length);
             logIt('Command issued', command, 'Sending to websocket clients');
-            sendClientsMessage(command, 'command');
+            sendClientsMessage(speech, 'command');
         } else {
             logIt('Unknown command', command);
         }
