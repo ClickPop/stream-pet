@@ -10,7 +10,7 @@ module.exports = {
             ]
         }
     },
-    websocket: {
-        port: process.env.WEBSOCKET_PORT
+    express: {
+        port: process.env.PORT || 80
     }
 };

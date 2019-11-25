@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "express": "4.17.1",
     "tmi.js": "^1.5.0",
     "websocket": "^1.0.30"
   }
