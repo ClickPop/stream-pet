@@ -23,6 +23,11 @@ tmiClient.on('message', onMessageHandler);
 tmiClient.on('connected', onConnectedHandler);
 tmiClient.on('join', onJoinHandler);
 
+// Global objects for tracking active users based on chat activity
+var activeUser = {};
+var activeTimeout;
+const timeout = 1000 * 60 * 5;
+
 // Connect to Twitch IRC via tmi.js
 tmiClient.connect();
 httpServer.listen(options.websocket.port, function() {
@@ -89,16 +94,43 @@ function onMessageHandler (target, context, msg, self) {
     if (!self) {
         // Trim whitespace for sanitize
         const command = msg.trim();
-        const commandTest = /!talk+/;
+        const talkCommand = /!talk+/;
+        const commandTest = /!\w+/;
+        let username = context.username;
 
-        if (commandTest.test(command)) {
+        //checks to see if this is the first message from the user
+        if (!(username in activeUser) || activeUser[username] === false) {
+            greet(target, context);
+        } else {
+            activeUser[username] = true;
+            clearTimeout(activeTimeout);
+            activeTimeout = setTimeout (timeoutFunc, timeout, username);
+        }
+
+        if (talkCommand.test(command)) {
             let speech = command.substring(6, command.length);
             logIt('Command issued', command, 'Sending to websocket clients');
             sendClientsMessage(speech, 'command');
-        } else {
+        } else if (commandTest.test(command)) {
             logIt('Unknown command', command);
         }
     }
 
     return;
+}
+
+// Function to greet a user when the send the first message in the chat and start a timeout timer
+function greet (target, user) {
+    const username = user.username;
+    logIt(`Greet Triggered with username: ${username}`);
+    sendClientsMessage(`Greetings ${username}, welcome to the channel`, 'command');
+    tmiClient.say(target,`Greetings ${username}, welcome to the channel`);
+    activeUser[username] = true;
+    activeTimeout = setTimeout (timeoutFunc, timeout, username);
+}
+
+// Function to reset the status of a user based on chat activity
+function timeoutFunc (name) {
+    activeUser[name] = false;
+    logIt(`${name} timed out`);
 }
