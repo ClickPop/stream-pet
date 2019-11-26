@@ -1,4 +1,5 @@
-require('dotenv');
+require('dotenv').config();
+
 const logIt = function() {
     const logLevel = process.env.LOGIT_LEVEL || "normal";
     if (logLevel !== "disabled" && typeof arguments === 'object') {
