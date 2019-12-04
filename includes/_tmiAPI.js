@@ -7,6 +7,7 @@ const tmiAPI = new tmi.client(options.tmi.client);
 // Global objects for tracking active users based on chat activity
 let activeUser = {};
 let activeTimeout;
+let tmiData = {};
 const timeout = 1000 * 60 * 5;
 
 // Function to greet a user when the send the first message in the chat and start a timeout timer
@@ -35,7 +36,7 @@ tmiAPI.on('message', (target, context, msg, self) => {
 
         // Regex Tests
         const commandTest = /^!\w+/;
-        const diceTest = /^!d(\d+)$/i;
+        const diceTest = /^!((roll d)|d)(\d+)$/i;
 
         // Get username from message context
         let username = context.username;
@@ -51,23 +52,37 @@ tmiAPI.on('message', (target, context, msg, self) => {
 
         if (commandTest.test(command)) {
             logIt(`tmi.js: Command issued ${command}`);
+            let newData = {};
+            newData.sent = Date.now();
             switch (true) {
                 case (command.startsWith('!talk')):
                     console.log("talk");
                     let speech = command.substring(6, command.length);
                     speech = speech.trim();
                     if (speech.length > 0) {
-                        tmiAPI.say(target, `/me ${context["display-name"]} says: ${speech}`);
+                        newData.command = "talk";
+                        newData.speech = speech;
+                    } else {
+                        newData = null;
                     }
                     break;
                 case (diceTest.test(command)):
                     let dice = command.match(diceTest);
-                    let diceSides = parseInt(dice[1], 10);
+                    let diceSides = parseInt(dice[3], 10);
                     if (!isNaN(diceSides)) {
                         let diceResult = (Math.floor(Math.random() * diceSides) + 1);
-                        tmiAPI.say(target, `/me Rolling a d${diceSides}... it's a ${diceResult}`);
+                        newData.command = "dice";
+                        newData.sides = diceSides;
+                        newData.result = diceResult;
+                    } else {
+                        newData = null;
                     }
                     break;
+                default:
+                    newData = null;
+            }
+            if (newData !== null) {
+                tmiData = newData;
             }
         }
     }
@@ -87,6 +102,10 @@ tmiAPI.on('join', (channel, username) => {
 
 // Initialize Twitch IRC Connection via tmi.js
 tmiAPI.connect();
+
+tmiAPI.getCurrentState = () => {
+    return tmiData;
+};
 
 // Pass tmiAPI as module
 module.exports = tmiAPI;
