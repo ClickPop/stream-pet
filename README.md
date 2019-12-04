@@ -2,19 +2,20 @@
 Twitch Stream Pet
 
 ## Running the server
+> Please refrain from using `yarn` to keep the Git repo a little cleaner. Sorry about my previous transgressions in this regard!
 
-1. From within the server (`./server`) directory run
-`npm install` or `yarn install` to install necessary dependencies.
+1. From within the root directory run
+`npm install` to install necessary dependencies.
 2. Create a file called `.env` in server directory.
 3. Copy contents of `.env.sample` to `.env` and fill in appropriate variables.
-4. To start the server: `npm start` or `yarn start`
+4. To start the server: `npm start`
 
 #Running the client
 
-1. Open `./client/index.html` in a browser.
-2. Once it connects, !commands typed in to Twitch Chat will appear.
+1. Open `http://127.0.0.1:<PORT>` in a browser.
+2. To view the current animation state: `/api/v1/creature/state/`.
 
 ## Editing the template (for the time being)
 
-1. Install [Sass](https://sass-lang.com/install).
-2. From your client (`./client`) directory run `sass --watch scss:css` - Any changes you make to the scss files will compile as css.
+1. Templates use PUG templating engine
+2. They located in the `views` path.
