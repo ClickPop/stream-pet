@@ -4,12 +4,31 @@ body {
   font-size: 18px;
   padding: 1rem; }
 
-.bubble {
-  background: #ffffff;
-  border-radius: 1rem;
-  display: inline-block;
-  max-width: 400px;
-  padding: 1rem;
-  width: 100%; }
+.app {
+  width: 400px;
+  height: 300px;
+  position: relative; }
+  .app .fett {
+    width: 150px;
+    height: 150px;
+    background-image: url(../images/boba-fett.gif);
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    z-index: 1; }
+  .app .bubble {
+    position: absolute;
+    bottom: 200px;
+    left: 50px;
+    right: 50px;
+    z-index: 2;
+    background: #ffffff;
+    border-radius: 1rem;
+    border: 2px solid #000;
+    display: none;
+    padding: 1rem;
+    box-sizing: border-box; }
 
 /*# sourceMappingURL=style.css.map */

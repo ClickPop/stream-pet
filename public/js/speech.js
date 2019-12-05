@@ -1,14 +1,12 @@
-$(document).ready(() => {
-    console.log('test');
-});
+$(document).ready(function() {
+    var text = "";
 
-var text = "";
-
-setInterval(() => {
-        $.get("/api/v1/creature/state/", (data) => {
-            if (text != data.speech) {
-                text = data.speech;
-                $("#speech").html(text);
-            }
-        });
- }, 100);
+    setInterval(() => {
+            $.get("/api/v1/creature/state/", (data) => {
+                if (text != data.speech && data.speech.length > 0) {
+                    text = data.speech;
+                    $(".bubble").text(text).show(250);
+                }
+            });
+     }, 100);
+ });
