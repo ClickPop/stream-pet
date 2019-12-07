@@ -1,12 +1,8 @@
-$(document).ready(function() {
-    var text = "";
+// Connect to websocket
+var socket = io.connect('http://localhost:1337');
 
-    setInterval(() => {
-            $.get("/api/v1/creature/state/", (data) => {
-                if (text != data.speech && data.speech.length > 0) {
-                    text = data.speech;
-                    $(".bubble").text(text).show(250);
-                }
-            });
-     }, 100);
- });
+// Display content in speech bubble when websocket sends data
+socket.on('speech', (data) => {
+    $(".bubble").hide();
+    $(".bubble").text(data.speech).show(150);
+});
