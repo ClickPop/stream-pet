@@ -14,6 +14,7 @@ Twitch Stream Pet
 
 1. Open `http://127.0.0.1:<PORT>` in a browser.
 2. To view the current animation state: `/api/v1/creature/state/`.
+3. Use !talk command to mirror the string in the speech bubble at `http://127.0.0.1:<PORT>/`. Ex: !talk Hello
 
 ## Editing the template (for the time being)
 
