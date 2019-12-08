@@ -11,7 +11,7 @@ body {
   .app .fett {
     width: 150px;
     height: 150px;
-    background-image: url(../images/boba-fett.gif);
+    background: url(../images/boba-fett.gif);
     background-size: contain;
     background-repeat: no-repeat;
     position: absolute;

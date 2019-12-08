@@ -12,11 +12,18 @@ const timeout = 1000 * 60 * 5;
 
 // Function to greet a user when the send the first message in the chat and start a timeout timer
 function greet (target, user) {
+    let newData = {};
+    newData.sent = Date.now();
     const username = user.username;
     logIt(`Greet Triggered with username: ${username}`);
     tmiAPI.say(target,`Greetings ${username}, welcome to the channel`);
+    newData.command = 'greet';
+    newData.user = username;
     activeUser[username] = true;
     activeTimeout = setTimeout (timeoutFunc, timeout, username);
+    if (newData !== null) {
+        tmiData = newData;
+    }
 }
 
 // Function to reset the status of a user based on chat activity
@@ -62,6 +69,7 @@ tmiAPI.on('message', (target, context, msg, self) => {
                     if (speech.length > 0) {
                         newData.command = "talk";
                         newData.speech = speech;
+                        newData.user = username;
                     } else {
                         newData = null;
                     }
@@ -77,6 +85,10 @@ tmiAPI.on('message', (target, context, msg, self) => {
                     } else {
                         newData = null;
                     }
+                    break;
+                case (command.startsWith('!dance')):
+                    console.log('dance');
+                    newData.command = 'dance';
                     break;
                 default:
                     newData = null;
