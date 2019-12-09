@@ -7,7 +7,7 @@ socket.on('connect', () => {
 
 // Display content in speech bubble when websocket sends data
 socket.on('talk', (data) => {
-    $(".bubble").text(data.username + ' says: ' + data.speech).show(150);
+    $(".bubble").text(data.user + ' says: ' + data.speech).show(150);
     setTimeout(() => {
         $(".bubble").text('');
         $(".bubble").hide(150);
