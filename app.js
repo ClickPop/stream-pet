@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
-var socketApi = require('./socketApi')
 
 var indexRouter = require('./routes/index');
 var animationStateRouter = require('./routes/animationState');
@@ -12,7 +11,6 @@ var animationStateData = {};
 
 // Create instance of Express and Socket.io
 var app = express();
-io = socketApi.io;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -59,9 +57,10 @@ const animationStateUpdater = () => {
         animationStateData = data;
         console.log(animationStateData);
         animationStateRouter.setCurrentState(animationStateData);
-        io.emit('speech', animationStateData);
     }
     setTimeout(animationStateUpdater, 100);
 }; animationStateUpdater();
+
+
 
 module.exports = app;
