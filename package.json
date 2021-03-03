@@ -15,7 +15,7 @@
     "morgan": "~1.9.1",
     "node-sass-middleware": "0.11.0",
     "path": "0.12.7",
-    "pug": "2.0.4",
+    "pug": "3.0.1",
     "socket.io": "^2.3.0",
     "tmi.js": "1.5.0"
   },
